@@ -2652,8 +2652,11 @@ class Component extends DCLogic {
     // مزامنة فورية للسجلات المشتركة بين النوافذ/الأقسام
     this._onStorage = (ev)=>{ if(ev && ev.key && (ev.key.indexOf('kpitbl_shared_')===0 || ev.key.indexOf('kpiytbl_shared_')===0)){ this._lastKey=null; this.forceUpdate(); } };
     window.addEventListener('storage', this._onStorage);
+    // تحديثات السحابة (cloud-sync.js): حدث مُجمَّع واحد بدل إعادة تحميل الصفحة
+    this._onRemoteUpdate = ()=>{ this._lastKey=null; this.forceUpdate(); };
+    window.addEventListener('kpiRemoteUpdate', this._onRemoteUpdate);
   }
-  componentWillUnmount(){ if(this._onStorage) window.removeEventListener('storage', this._onStorage); }
+  componentWillUnmount(){ if(this._onStorage) window.removeEventListener('storage', this._onStorage); if(this._onRemoteUpdate) window.removeEventListener('kpiRemoteUpdate', this._onRemoteUpdate); }
 
   _loadDeleted(){ let d; try{ d=JSON.parse(localStorage.getItem(this._ns('deleted'))||'[]'); }catch(e){ d=[]; } d=Array.isArray(d)?d:[]; const ids=this._deptList().map(k=>k.id); const pruned=d.filter(x=>!ids.includes(x)); if(pruned.length!==d.length) this._saveDeleted(pruned); this.setState({ deleted: pruned }); }
   _saveDeleted(d){ try{ localStorage.setItem(this._ns('deleted'), JSON.stringify(d)); }catch(e){} }

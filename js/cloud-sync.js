@@ -65,7 +65,23 @@
     if (isKpiKey(k)) schedulePush(k); // القيمة أصبحت غير موجودة → تُدفع كـ null
   };
 
-  var pendingReload = false;
+  // ——— تطبيق التغييرات على الواجهة بدون إعادة تحميل ———
+  // نجمع مفاتيح التغييرات ونُصدر حدثًا واحدًا مُجمَّعًا (بدل location.reload) لتُعيد الواجهة رسم
+  // العناصر المتأثرة فقط عبر forceUpdate. نؤجّل الإصدار أثناء كتابة المستخدم أو دفع تعديلاته.
+  var notifyTimer = null;
+  var pendingKeys = {};
+  function notifyApp(keys) {
+    keys.forEach(function (k) { pendingKeys[k] = true; });
+    if (!notifyTimer) notifyTimer = setTimeout(flushNotify, 80);
+  }
+  function flushNotify() {
+    notifyTimer = null;
+    if (isEditing() || Object.keys(pending).length) { notifyTimer = setTimeout(flushNotify, 250); return; }
+    var keys = Object.keys(pendingKeys);
+    pendingKeys = {};
+    if (!keys.length) return;
+    try { window.dispatchEvent(new CustomEvent('kpiRemoteUpdate', { detail: { keys: keys } })); } catch (e) {}
+  }
 
   // ——— سجل النشاط (إشعارات تغييرات الآخرين) ———
   function deptLabel(k) {
@@ -124,9 +140,7 @@
         }
       }
     }
-    if (changed) { pendingReload = true; logActivity(changedKeys); }
-    // إن لم يكن المستخدم يكتب الآن، اعكس التغييرات فورًا؛ وإلا انتظر حتى يتوقف
-    if (pendingReload && !isEditing() && Object.keys(pending).length === 0) softRefresh();
+    if (changed) { logActivity(changedKeys); notifyApp(changedKeys); }
     return changed;
   }
 
@@ -135,18 +149,9 @@
     return el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT');
   }
 
-  var reloadTimer = null;
-  function softRefresh() {
-    if (reloadTimer) return;
-    // تجميع دفعات التغييرات المتلاحقة في إعادة عرض واحدة
-    reloadTimer = setTimeout(function () { location.reload(); }, 150);
-  }
-
-  // متى ما توقّف المستخدم عن الكتابة، اعكس تغييرات الآخرين المعلّقة
+  // متى ما توقّف المستخدم عن الكتابة، اعكس تغييرات الآخرين المعلّقة المؤجَّلة
   document.addEventListener('focusout', function () {
-    setTimeout(function () {
-      if (pendingReload && !isEditing() && Object.keys(pending).length === 0) softRefresh();
-    }, 300);
+    setTimeout(function () { if (Object.keys(pendingKeys).length && !notifyTimer) notifyTimer = setTimeout(flushNotify, 80); }, 300);
   });
 
   // ——— البث اللحظي (SSE): المسار الأساسي لظهور التعديلات بلا تأخير ———
@@ -209,9 +214,8 @@
       .then(function (res) {
         online = true;
         lastTs = res.ts || 0;
-        var changed = applyRemote(res.data || {}, true);
-        if (!changed) { if (btn) { btn.classList.remove('__spin'); btn.style.opacity = '1'; } }
-        // إن تغيّرت البيانات ستُعاد الصفحة تلقائيًا داخل applyRemote
+        applyRemote(res.data || {}, true);
+        if (btn) { btn.classList.remove('__spin'); btn.style.opacity = '1'; }
       })
       .catch(function () {
         if (btn) { btn.classList.remove('__spin'); btn.style.opacity = '1'; }
