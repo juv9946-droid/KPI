@@ -10,7 +10,7 @@
  * إذا فُتح الملف بدون خادم (كملف محلي)، يعمل النظام بوضع محلي دون مزامنة.
  */
 (function () {
-  var PREFIX = 'kpi_';                 // نُزامن فقط مفاتيح النظام
+  var PREFIX = 'kpi';                  // نُزامن كل مفاتيح النظام (kpi_, kpitbl_, kpiytbl_, kpichan_, kpidig_, kpifol_, kpimig_ ...)
   var API = '';                        // نفس النطاق (الخادم يخدم الواجهة)
   var POLL_MS = 2500;                  // خطة بديلة: سحب دوري إن تعذّر البث اللحظي
   var CLIENT_ID = String(Date.now()) + '-' + Math.random().toString(36).slice(2, 8);
@@ -106,6 +106,7 @@
     var changedKeys = [];
     Object.keys(data).forEach(function (k) {
       if (!isKpiKey(k)) return;
+      if (pending[k]) return; // تعديل محلي لم يُدفع بعد — لا نستبدله بنسخة أقدم من الخادم
       var incoming = JSON.stringify(data[k]);
       if (localStorage.getItem(k) !== incoming) {
         origSet(k, incoming);
@@ -116,7 +117,7 @@
     if (full) {
       for (var i = localStorage.length - 1; i >= 0; i--) {
         var lk = localStorage.key(i);
-        if (isKpiKey(lk) && !(lk in data)) {
+        if (isKpiKey(lk) && !pending[lk] && !(lk in data)) {
           origRemove(lk);
           changed = true;
           changedKeys.push(lk);
@@ -307,6 +308,8 @@
         var changed = applyRemote(res.data || {}, true);
         booting = false;
         window.__KPI_CLOUD__ = { online: true };
+        window.__KPI_CLOUD_READY__ = true;
+        document.dispatchEvent(new CustomEvent('kpiCloudReady', { detail: { ts: lastTs, changed: changed } }));
         banner('', '');
         if (!openStream() && !changed) { polling = true; setTimeout(poll, POLL_MS); }
       })
