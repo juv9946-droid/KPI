@@ -1931,7 +1931,13 @@
                   <tr>
                     <td style="position:sticky;right:0;background:var(--surface);padding:5px 12px;border-bottom:1px solid var(--border);font-weight:500">{{ rw.month }}</td>
                     <sc-for list="{{ rw.cells }}" as="cc" hint-placeholder-count="5">
-                      <td style="padding:4px 4px;border-bottom:1px solid var(--border);text-align:center"><input type="number" value="{{ cc.val }}" data-kpi="{{ selCard.id }}" data-year="{{ cc.year }}" data-month="{{ cc.month }}" onInput="{{ ytblEdit }}" style="width:74px;border:1px solid var(--border);border-radius:6px;padding:5px 4px;font-family:inherit;font-size:11px;background:var(--surface);color:var(--text);outline:none;text-align:center"></td>
+                      <td style="padding:4px 4px;border-bottom:1px solid var(--border);text-align:center">
+                        <input type="number" value="{{ cc.val }}" data-kpi="{{ selCard.id }}" data-year="{{ cc.year }}" data-month="{{ cc.month }}" onInput="{{ ytblEdit }}" style="width:74px;border:1px solid var(--border);border-radius:6px;padding:5px 4px;font-family:inherit;font-size:11px;background:var(--surface);color:var(--text);outline:none;text-align:center">
+                        <div style="margin-top:3px;font-size:9px;line-height:1.6;white-space:nowrap">
+                          <div style="color:{{ cc.pctMColor }}" title="نسبة النمو الشهرية مقابل نفس الشهر من السنة السابقة">ش {{ cc.pctMTxt }}</div>
+                          <div style="color:{{ cc.pctCumColor }}" title="نسبة النمو التراكمية منذ بداية السنة مقابل نفس الفترة من السنة السابقة">ت {{ cc.pctCumTxt }}</div>
+                        </div>
+                      </td>
                     </sc-for>
                   </tr>
                 </sc-for>
@@ -2265,53 +2271,63 @@
           <sc-if value="{{ selCard.showQta }}" hint-placeholder-val="{{ false }}">
           <div class="card" style="padding:11px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:center;border-color:var(--primary)">
             <span style="width:22px;height:22px;border-radius:7px;background:var(--primary-soft);color:var(--primary-2);display:grid;place-items:center;font-size:11px;font-weight:700;flex:none">Q</span>
-            <div style="font-size:12.5px;color:var(--text-2);line-height:1.7">يُدخل المستخدم Target و Actual لكل ربع فقط · الإجمالي ونسب الإنجاز تُحتسب تلقائيًا وتتحدّث فورًا · بدّل السنة من أعلى الصفحة لإدخال بيانات كل سنة.</div>
+            <div style="font-size:12.5px;color:var(--text-2);line-height:1.7">يُدخل المستخدم نتيجة الاستبيان (%) لكل شهر فقط · النسبة التراكمية ونتائج الأرباع الأربعة والسنة تُحتسب تلقائيًا كمتوسط الأشهر الفعلية وتتحدّث فورًا · بدّل السنة من أعلى الصفحة لإدخال بيانات كل سنة.</div>
           </div>
 
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px">
-            <div style="background:var(--surface);padding:12px 14px"><div style="font-size:11px;color:var(--text-2)">إجمالي الهدف السنوي</div><div style="font-weight:700;font-size:17px;margin-top:3px;color:var(--primary-2)">{{ selCard.table.totalTarget }}</div></div>
-            <div style="background:var(--surface);padding:12px 14px"><div style="font-size:11px;color:var(--text-2)">إجمالي المحقق</div><div style="font-weight:700;font-size:17px;margin-top:3px;color:#16A34A">{{ selCard.table.totalActual }}</div></div>
             <div style="background:var(--surface);padding:12px 14px"><div style="font-size:11px;color:var(--text-2)">نسبة الإنجاز السنوية</div><div style="font-weight:700;font-size:17px;margin-top:3px;color:{{ selCard.table.annPctColor }}">{{ selCard.table.annPct }}</div></div>
+            <div style="background:var(--surface);padding:12px 14px"><div style="font-size:11px;color:var(--text-2)">اتجاه الأداء</div><div style="font-weight:600;font-size:13px;margin-top:3px;color:{{ selCard.table.trendColor }}">{{ selCard.table.trendTxt }}</div></div>
+            <div style="background:var(--surface);padding:12px 14px"><div style="font-size:11px;color:var(--text-2)">عدد الأشهر المُدخلة</div><div style="font-weight:700;font-size:17px;margin-top:3px">{{ selCard.table.filledMonths }}</div></div>
             <div style="background:var(--surface);padding:12px 14px"><div style="font-size:11px;color:var(--text-2)">أفضل ربع</div><div style="font-weight:600;font-size:13px;margin-top:3px;color:var(--ok)">{{ selCard.table.bestQ }}</div></div>
             <div style="background:var(--surface);padding:12px 14px"><div style="font-size:11px;color:var(--text-2)">أقل ربع</div><div style="font-weight:600;font-size:13px;margin-top:3px;color:var(--bad)">{{ selCard.table.worstQ }}</div></div>
             <div style="background:var(--surface);padding:12px 14px"><div style="font-size:11px;color:var(--text-2)">متوسط الإنجاز</div><div style="font-weight:600;font-size:13px;margin-top:3px">{{ selCard.table.avgTxt }}</div></div>
           </div>
 
           <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
-            <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:14px">{{ selCard.table.title }} · {{ year }}</div>
+            <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:14px">{{ selCard.table.title }} — الإدخال الشهري · {{ year }}</div>
+            <div style="overflow-x:auto">
+            <table style="border-collapse:collapse;font-size:12px;min-width:1180px;width:100%">
+              <thead><tr>
+                <th style="position:sticky;right:0;background:var(--surface-2);text-align:right;padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text-2);font-weight:600;min-width:100px">البند</th>
+                <sc-for list="{{ selCard.table.monthCells }}" as="mq" hint-placeholder-count="12">
+                  <th style="text-align:center;padding:8px 6px;background:var(--surface-2);border-bottom:1px solid var(--border);color:var(--text-2);font-weight:700">{{ mq.label }}</th>
+                </sc-for>
+                <th style="text-align:center;padding:8px 8px;background:var(--primary-soft);border-bottom:1px solid var(--border);color:var(--primary-2);font-weight:700">السنة</th>
+              </tr></thead>
+              <tbody>
+                <tr>
+                  <td style="position:sticky;right:0;background:var(--surface);padding:7px 14px;border-bottom:1px solid var(--border);font-weight:600">نتيجة الاستبيان<div style="font-size:10.5px;color:var(--text-3);font-weight:500">Survey Result %</div></td>
+                  <sc-for list="{{ selCard.table.monthCells }}" as="mq" hint-placeholder-count="12">
+                    <td style="padding:5px 4px;border-bottom:1px solid var(--border);text-align:center"><input type="number" value="{{ mq.resultIn }}" data-kpi="{{ selCard.id }}" data-month="{{ mq.key }}" data-field="result" onInput="{{ tblEdit }}" onClick="{{ stop }}" style="width:66px;border:1px solid var(--border);border-radius:6px;padding:6px 3px;font-family:inherit;font-size:11.5px;background:var(--surface);color:var(--text);outline:none;text-align:center" style-focus="border-color:var(--primary)"></td>
+                  </sc-for>
+                  <td style="padding:7px 8px;border-bottom:1px solid var(--border);text-align:center;font-weight:800;color:{{ selCard.table.annPctColor }}">{{ selCard.table.annPct }}</td>
+                </tr>
+                <tr style="background:var(--surface-2)">
+                  <td style="position:sticky;right:0;background:var(--surface-2);padding:7px 14px;font-weight:600">النسبة التراكمية<div style="font-size:10.5px;color:var(--text-3);font-weight:500">Cumulative %</div></td>
+                  <sc-for list="{{ selCard.table.monthCells }}" as="mq" hint-placeholder-count="12">
+                    <td style="padding:7px 4px;text-align:center;font-weight:700;color:{{ mq.cumPctColor }}">{{ mq.cumPct }}</td>
+                  </sc-for>
+                  <td style="padding:7px 8px;text-align:center;font-weight:800;color:{{ selCard.table.annPctColor }}">{{ selCard.table.annPct }}</td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+
+          <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+            <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:14px">النتائج الربعية — محسوبة تلقائيًا كمتوسط نتائج أشهر كل ربع · {{ year }}</div>
             <div style="overflow-x:auto">
             <table style="border-collapse:collapse;font-size:12.5px;min-width:640px;width:100%">
               <thead><tr>
                 <th style="text-align:right;padding:10px 14px;background:var(--surface-2);border-bottom:1px solid var(--border);color:var(--text-2);font-weight:600;min-width:120px">البند</th>
                 <sc-for list="{{ selCard.table.cells }}" as="q" hint-placeholder-count="4">
-                  <th style="text-align:center;padding:8px 8px;background:var(--surface-2);border-bottom:1px solid var(--border);color:var(--text-2);font-weight:700">{{ q.label }}<div style="font-size:10.5px;color:var(--text-3);font-weight:500;direction:ltr">{{ q.sub }}</div></th>
+                  <th style="text-align:center;padding:8px 8px;background:var(--surface-2);border-bottom:1px solid var(--border);color:var(--text-2);font-weight:700">{{ q.label }}<div style="font-size:10.5px;color:var(--text-3);font-weight:500">{{ q.sub }}</div></th>
                 </sc-for>
-                <th style="text-align:center;padding:8px 8px;background:var(--primary-soft);border-bottom:1px solid var(--border);color:var(--primary-2);font-weight:700">الإجمالي<div style="font-size:10.5px;font-weight:500;direction:ltr">Total</div></th>
+                <th style="text-align:center;padding:8px 8px;background:var(--primary-soft);border-bottom:1px solid var(--border);color:var(--primary-2);font-weight:700">السنة</th>
               </tr></thead>
               <tbody>
                 <tr>
-                  <td style="padding:7px 14px;border-bottom:1px solid var(--border);font-weight:600">Target<div style="font-size:10.5px;color:var(--text-3);font-weight:500">الهدف</div></td>
-                  <sc-for list="{{ selCard.table.cells }}" as="q" hint-placeholder-count="4">
-                    <td style="padding:5px 6px;border-bottom:1px solid var(--border);text-align:center"><input type="number" value="{{ q.targetIn }}" data-kpi="{{ selCard.id }}" data-month="{{ q.key }}" data-field="target" onInput="{{ tblEdit }}" onClick="{{ stop }}" style="width:82px;border:1px solid var(--border);border-radius:6px;padding:6px 4px;font-family:inherit;font-size:12px;background:var(--surface);color:var(--text);outline:none;text-align:center" style-focus="border-color:var(--primary)"></td>
-                  </sc-for>
-                  <td style="padding:7px 8px;border-bottom:1px solid var(--border);text-align:center;font-weight:700;direction:ltr">{{ selCard.table.totalTarget }}</td>
-                </tr>
-                <tr>
-                  <td style="padding:7px 14px;border-bottom:1px solid var(--border);font-weight:600">Actual<div style="font-size:10.5px;color:var(--text-3);font-weight:500">المحقق</div></td>
-                  <sc-for list="{{ selCard.table.cells }}" as="q" hint-placeholder-count="4">
-                    <td style="padding:5px 6px;border-bottom:1px solid var(--border);text-align:center"><input type="number" value="{{ q.actualIn }}" data-kpi="{{ selCard.id }}" data-month="{{ q.key }}" data-field="actual" onInput="{{ tblEdit }}" onClick="{{ stop }}" style="width:82px;border:1px solid var(--border);border-radius:6px;padding:6px 4px;font-family:inherit;font-size:12px;background:var(--surface);color:var(--text);outline:none;text-align:center" style-focus="border-color:var(--primary)"></td>
-                  </sc-for>
-                  <td style="padding:7px 8px;border-bottom:1px solid var(--border);text-align:center;font-weight:700;direction:ltr;color:#16A34A">{{ selCard.table.totalActual }}</td>
-                </tr>
-                <tr style="background:var(--surface-2)">
-                  <td style="padding:7px 14px;border-bottom:1px solid var(--border);font-weight:600">Total<div style="font-size:10.5px;color:var(--text-3);font-weight:500">المحقق التراكمي</div></td>
-                  <sc-for list="{{ selCard.table.cells }}" as="q" hint-placeholder-count="4">
-                    <td style="padding:7px 8px;border-bottom:1px solid var(--border);text-align:center;font-weight:600;direction:ltr">{{ q.cum }}</td>
-                  </sc-for>
-                  <td style="padding:7px 8px;border-bottom:1px solid var(--border);text-align:center;font-weight:700;direction:ltr">{{ selCard.table.totalCum }}</td>
-                </tr>
-                <tr>
-                  <td style="padding:7px 14px;border-bottom:1px solid var(--border);font-weight:600">Achievement %<div style="font-size:10.5px;color:var(--text-3);font-weight:500">نسبة الإنجاز</div></td>
+                  <td style="padding:7px 14px;border-bottom:1px solid var(--border);font-weight:600">نسبة الإنجاز<div style="font-size:10.5px;color:var(--text-3);font-weight:500">Achievement %</div></td>
                   <sc-for list="{{ selCard.table.cells }}" as="q" hint-placeholder-count="4">
                     <td style="padding:7px 8px;border-bottom:1px solid var(--border);text-align:center;font-weight:700;color:{{ q.pctColor }}">{{ q.pct }}</td>
                   </sc-for>
@@ -2323,10 +2339,10 @@
           </div>
 
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">Target مقابل Actual لكل ربع</div><div id="ch-qta-ta" style="min-height:260px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">نسب الإنجاز</div><div id="ch-qta-ach" style="min-height:260px"></div></div>
+            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">نسبة الإنجاز لكل ربع</div><div id="ch-qta-ta" style="min-height:260px"></div></div>
+            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">نتيجة الاستبيان الشهرية</div><div id="ch-qta-ach" style="min-height:260px"></div></div>
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة الأرباع الأربعة</div><div id="ch-qta-cmp" style="min-height:260px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">Trend Analysis — المحقق والتراكمي</div><div id="ch-qta-trend" style="min-height:260px"></div></div>
+            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">Trend Analysis — الشهري والتراكمي</div><div id="ch-qta-trend" style="min-height:260px"></div></div>
           </div>
 
           <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
@@ -2334,16 +2350,12 @@
             <table style="border-collapse:collapse;font-size:12.5px;width:100%">
               <thead><tr>
                 <th style="text-align:right;padding:10px 16px;background:var(--surface-2);border-bottom:1px solid var(--border);color:var(--text-2);font-weight:600">السنة</th>
-                <th style="text-align:center;padding:10px 8px;background:var(--surface-2);border-bottom:1px solid var(--border);color:var(--text-2);font-weight:600">Target</th>
-                <th style="text-align:center;padding:10px 8px;background:var(--surface-2);border-bottom:1px solid var(--border);color:var(--text-2);font-weight:600">Actual</th>
                 <th style="text-align:center;padding:10px 8px;background:var(--surface-2);border-bottom:1px solid var(--border);color:var(--text-2);font-weight:600">نسبة الإنجاز</th>
               </tr></thead>
               <tbody>
                 <sc-for list="{{ selCard.table.yearRows }}" as="y" hint-placeholder-count="4">
                   <tr>
                     <td style="padding:8px 16px;border-bottom:1px solid var(--border);font-weight:600;direction:ltr">{{ y.year }}</td>
-                    <td style="padding:8px 8px;border-bottom:1px solid var(--border);text-align:center;direction:ltr">{{ y.target }}</td>
-                    <td style="padding:8px 8px;border-bottom:1px solid var(--border);text-align:center;direction:ltr">{{ y.actual }}</td>
                     <td style="padding:8px 8px;border-bottom:1px solid var(--border);text-align:center;font-weight:700;color:{{ y.pctColor }}">{{ y.pct }}</td>
                   </tr>
                 </sc-for>
@@ -3376,10 +3388,24 @@ class Component extends DCLogic {
     const num = v => { const n=parseFloat(v); return isNaN(n)?null:n; };
     const yearTotal = y => { let s=0,any=false; this.MONTHS.forEach(m=>{ const v=num((data[y]||{})[m]); if(v!=null){s+=v;any=true;} }); return any?s:null; };
     const yearCount = y => { let c=0; this.MONTHS.forEach(m=>{ if(num((data[y]||{})[m])!=null) c++; }); return c; };
-    // grid rows: one per month, a cell per year (editable)
+    // grid rows: one per month, a cell per year (editable) — مع النسبة الشهرية والتراكمية تلقائيًا مقابل السنة السابقة
     const rows = this.MONTHS.map((m,i)=>({
       month:m, short:this.MSHORT[i],
-      cells: years.map(y=>({ year:y, month:m, val:((data[y]||{})[m]===undefined)?'':(data[y]||{})[m] }))
+      cells: years.map(y=>{
+        const val = (data[y]||{})[m]===undefined?'':(data[y]||{})[m];
+        const py = String(parseInt(y,10)-1);
+        const curN = num(val), prevN = num((data[py]||{})[m]);
+        const pctM = (curN!=null && prevN!=null && prevN!==0) ? Math.round((curN-prevN)/prevN*1000)/10 : null;
+        let curCum=0, prevCum=0, anyC=false, anyP=false;
+        for(let k=0;k<=i;k++){ const mm=this.MONTHS[k];
+          const vC=num((data[y]||{})[mm]); if(vC!=null){curCum+=vC;anyC=true;}
+          const vP=num((data[py]||{})[mm]); if(vP!=null){prevCum+=vP;anyP=true;}
+        }
+        const pctCum = (anyC && anyP && prevCum!==0) ? Math.round((curCum-prevCum)/prevCum*1000)/10 : null;
+        return { year:y, month:m, val,
+          pctM, pctMTxt: pctM==null?'—':(pctM>0?'+':'')+pctM+'%', pctMColor: pctM==null?'var(--text-3)':(pctM>=0?'var(--ok)':'var(--bad)'),
+          pctCum, pctCumTxt: pctCum==null?'—':(pctCum>0?'+':'')+pctCum+'%', pctCumColor: pctCum==null?'var(--text-3)':(pctCum>=0?'var(--ok)':'var(--bad)') };
+      })
     }));
     const totals = years.map(y=>({ year:y, total:yearTotal(y), avg:(yearCount(y)?Math.round(yearTotal(y)/yearCount(y)*10)/10:null) }));
     const fmt = n => n==null?'—':n.toLocaleString('en-US');
@@ -4014,38 +4040,70 @@ class Component extends DCLogic {
     {key:'q2', label:'الربع الثاني', sub:'April', short:'Q2'},
     {key:'q3', label:'الربع الثالث', sub:'July', short:'Q3'},
     {key:'q4', label:'الربع الرابع', sub:'October', short:'Q4'} ]; }
-  _qtaYear(kpiId, year){ const d=this._tblDataYear(kpiId, year); let st=0, sa=0, any=false;
-    this._QTA().forEach(q=>{ const dq=d[q.key]||{}; const t=parseFloat(dq.target), a=parseFloat(dq.actual);
-      if(!isNaN(t)){ st+=t; any=true; } if(!isNaN(a)){ sa+=a; any=true; } });
-    return { target:st, actual:sa, any, pct: st>0? Math.round(sa/st*1000)/10 : null }; }
+  _qtaMonths(){ return {q1:[0,1,2], q2:[3,4,5], q3:[6,7,8], q4:[9,10,11]}; }
+  // ترحيل لمرة واحدة لكل سنة: (1) يوزّع أي هدف/محقق ربعي قديم بالتساوي على أشهره الثلاثة (2) يشتق نتيجة استبيان شهرية من هدف/محقق شهري قديم إن وُجد — بدون حذف أي بيانات قديمة
+  _qtaMonthlyEnsure(kpiId, year){
+    const key=this._tblKey(kpiId, year);
+    let d; try{ const s=localStorage.getItem(key); d=s?JSON.parse(s):{}; }catch(e){ d={}; }
+    const hasMonthly = this.MONTHS.some(m=> d[m] && ((d[m].target!==undefined&&d[m].target!=='') || (d[m].actual!==undefined&&d[m].actual!=='')));
+    const hasLegacy = ['q1','q2','q3','q4'].some(q=> d[q] && ((d[q].target!==undefined&&d[q].target!=='') || (d[q].actual!==undefined&&d[q].actual!=='')));
+    let changed=false;
+    if(!hasMonthly && hasLegacy && !d.__qtaMigrated){
+      const qm=this._qtaMonths();
+      Object.keys(qm).forEach(qk=>{ const dq=d[qk]; if(!dq) return;
+        const t=parseFloat(dq.target), a=parseFloat(dq.actual);
+        qm[qk].forEach(mi=>{ const mn=this.MONTHS[mi]; d[mn]=d[mn]||{};
+          if(!isNaN(t)) d[mn].target=t/3;
+          if(!isNaN(a)) d[mn].actual=a/3;
+        });
+      });
+      d.__qtaMigrated=true; changed=true;
+    }
+    // يشتق "نتيجة الاستبيان" الشهرية = نسبة الإنجاز (محقق/هدف) إن وُجدت، وإلا المحقق نفسه — بدون المساس بالهدف/المحقق القديم
+    this.MONTHS.forEach(m=>{ const dm=d[m];
+      if(dm && (dm.result===undefined || dm.result==='')){
+        const t=parseFloat(dm.target), a=parseFloat(dm.actual);
+        if(!isNaN(a)){ const r=(!isNaN(t)&&t>0)? Math.round(a/t*1000)/10 : Math.round(a*10)/10; dm.result=String(r); changed=true; }
+      }
+    });
+    if(changed){ try{ localStorage.setItem(key, JSON.stringify(d)); }catch(e){} }
+    return d;
+  }
+  _qtaYear(kpiId, year){ const d=this._qtaMonthlyEnsure(kpiId, year); let sum=0, cnt=0;
+    this.MONTHS.forEach(m=>{ const r=parseFloat((d[m]||{}).result); if(!isNaN(r)){ sum+=r; cnt++; } });
+    return { any: cnt>0, pct: cnt? Math.round(sum/cnt*10)/10 : null }; }
   _buildQtaTable(kpiId){
     const cfg=this.TABLES[kpiId]; const NA='لا توجد بيانات';
-    const qs=this._QTA(); const data=this._tblData(kpiId);
+    const d=this._qtaMonthlyEnsure(kpiId, this.state.year);
     const num=v=>{ const n=parseFloat(v); return isNaN(n)?null:n; };
-    const fmt=v=>v==null?'—':Math.round(v).toLocaleString('en-US');
     const col=p=>p==null?'var(--text-3)':(p>=100?'var(--ok)':(p>=75?'var(--warn)':'var(--bad)'));
-    let sT=0,sA=0,anyT=false,anyA=false,run=0;
-    const cells=qs.map(q=>{ const dq=data[q.key]||{}; const t=num(dq.target), a=num(dq.actual);
-      if(t!=null){ sT+=t; anyT=true; } if(a!=null){ sA+=a; anyA=true; run+=a; }
-      const pct=(t!=null && t>0 && a!=null)? Math.round(a/t*1000)/10 : null;
-      return { key:q.key, label:q.label, sub:q.sub, short:q.short,
-        targetIn:(dq.target==null?'':dq.target), actualIn:(dq.actual==null?'':dq.actual),
-        targetN:t, actualN:a, target:t==null?'—':fmt(t), actual:a==null?'—':fmt(a),
-        cum:a==null?'—':fmt(run), cumN:a==null?null:run,
-        pctN:pct, pct: pct==null? ((t!=null&&t===0)?NA:'—') : pct.toFixed(1)+'%', pctColor:col(pct) }; });
-    const annPct=(anyT && sT>0)? Math.round(sA/sT*1000)/10 : null;
+    let sum=0, cnt=0;
+    const monthCells=this.MONTHS.map((m,i)=>{
+      const dm=d[m]||{}; const r=num(dm.result);
+      if(r!=null){ sum+=r; cnt++; }
+      const cumPct = cnt? Math.round(sum/cnt*10)/10 : null;
+      return { key:m, label:this.MSHORT[i], sub:m,
+        resultIn:(dm.result==null?'':dm.result),
+        pctN:r, pct:r==null?NA:r.toFixed(1)+'%', pctColor:col(r),
+        cumPctN:cumPct, cumPct:cumPct==null?'—':cumPct.toFixed(1)+'%', cumPctColor:col(cumPct) };
+    });
+    const qm=this._qtaMonths(); const QLBL={q1:'الربع الأول',q2:'الربع الثاني',q3:'الربع الثالث',q4:'الربع الرابع'};
+    const cells=Object.keys(qm).map(qk=>{
+      let sQ=0,cQ=0;
+      qm[qk].forEach(mi=>{ const mc=monthCells[mi]; if(mc.pctN!=null){sQ+=mc.pctN;cQ++;} });
+      const pct = cQ? Math.round(sQ/cQ*10)/10 : null;
+      return { key:qk, label:QLBL[qk], sub:qm[qk].map(mi=>this.MSHORT[mi]).join('+'), short:QLBL[qk],
+        pctN:pct, pct:pct==null?NA:pct.toFixed(1)+'%', pctColor:col(pct) };
+    });
+    const annPct = cnt? Math.round(sum/cnt*10)/10 : null;
     const done=cells.filter(c=>c.pctN!=null);
     const best=done.slice().sort((a,b)=>b.pctN-a.pctN)[0], worst=done.slice().sort((a,b)=>a.pctN-b.pctN)[0];
     const avg=done.length? Math.round(done.reduce((s,c)=>s+c.pctN,0)/done.length*10)/10 : null;
     const trend=(done.length>=2)? Math.round((done[done.length-1].pctN-done[done.length-2].pctN)*10)/10 : null;
     const yrs=(this.state.years||this.YEARS);
     const yearRows=yrs.map(y=>{ const s=this._qtaYear(kpiId,y);
-      return { year:y, target:s.any?fmt(s.target):'—', actual:s.any?fmt(s.actual):'—',
-        pctN:s.pct, pct:s.pct==null?NA:s.pct.toFixed(1)+'%', pctColor:col(s.pct) }; });
-    return { kind:'qta', kpiId, title:cfg.title, cells, yearRows,
-      totalTarget:anyT?fmt(sT):NA, totalTargetN:anyT?sT:null,
-      totalActual:anyA?fmt(sA):NA, totalActualN:anyA?sA:null,
-      totalCum:anyA?fmt(sA):'—',
+      return { year:y, pctN:s.pct, pct:s.pct==null?NA:s.pct.toFixed(1)+'%', pctColor:col(s.pct) }; });
+    return { kind:'qta', kpiId, title:cfg.title, cells, monthCells, yearRows, filledMonths:cnt,
       annPct:annPct==null?NA:annPct.toFixed(1)+'%', annPctN:annPct, annPctColor:col(annPct),
       bestQ:best? this._np(best.label, best.pctN.toFixed(1)+'%'):'—',
       worstQ:worst? this._np(worst.label, worst.pctN.toFixed(1)+'%'):'—',
@@ -4159,17 +4217,19 @@ class Component extends DCLogic {
       const qf=this._qtaExpFilter;
       const cs = qf? t.cells.filter(c=>c.key===qf) : t.cells;
       const one = !!qf && cs.length===1;
+      const qmE=this._qtaMonths(); const mIdx = qf? qmE[qf] : [0,1,2,3,4,5,6,7,8,9,10,11];
+      const mcs = mIdx.map(i=>t.monthCells[i]);
+      secs.push({ title:'التفصيل الشهري — نتيجة الاستبيان'+(one?(' — '+cs[0].label):'')+' · '+this.state.year,
+        headers:['الشهر','نتيجة الاستبيان','النسبة التراكمية'],
+        rows: mcs.map(mc=>[mc.sub, mc.pct, mc.cumPct]) });
       secs.push({ title:cfg.title+' — '+(one? cs[0].label+' · ' : '')+this.state.year,
-        headers:['البند'].concat(cs.map(c=>c.label)).concat(one?[]:['الإجمالي']),
-        rows:[ ['Target'].concat(cs.map(c=>c.target)).concat(one?[]:[t.totalTarget]),
-               ['Actual'].concat(cs.map(c=>c.actual)).concat(one?[]:[t.totalActual]),
-               ['Total'].concat(cs.map(c=>c.cum)).concat(one?[]:[t.totalCum]),
-               ['Achievement %'].concat(cs.map(c=>c.pct)).concat(one?[]:[t.annPct]) ] });
-      if(!one) secs.push({ title:'مقارنة السنوات', headers:['السنة','Target','Actual','نسبة الإنجاز'],
-        rows:t.yearRows.map(y=>[y.year,y.target,y.actual,y.pct]) });
+        headers:['البند'].concat(cs.map(c=>c.label)).concat(one?[]:['السنة']),
+        rows:[ ['نسبة الإنجاز'].concat(cs.map(c=>c.pct)).concat(one?[]:[t.annPct]) ] });
+      if(!one) secs.push({ title:'مقارنة السنوات', headers:['السنة','نسبة الإنجاز'],
+        rows:t.yearRows.map(y=>[y.year,y.pct]) });
       analytics = one
-        ? [['الربع',cs[0].label],['Target',cs[0].target],['Actual',cs[0].actual],['المحقق التراكمي',cs[0].cum],['نسبة الإنجاز',cs[0].pct]]
-        : [['إجمالي الهدف',t.totalTarget],['إجمالي المحقق',t.totalActual],['نسبة الإنجاز السنوية',t.annPct],['أفضل ربع',t.bestQ],['أقل ربع',t.worstQ],['متوسط الإنجاز',t.avgTxt],['اتجاه الأداء',t.trendTxt]];
+        ? [['الربع',cs[0].label],['نسبة الإنجاز',cs[0].pct]]
+        : [['نسبة الإنجاز السنوية',t.annPct],['أفضل ربع',t.bestQ],['أقل ربع',t.worstQ],['متوسط الإنجاز',t.avgTxt],['اتجاه الأداء',t.trendTxt],['عدد الأشهر المُدخلة',t.filledMonths]];
       notes=t.belowTxt;
     } else if(cfg && cfg.kind==='quarterly'){
       const t=this._buildQuarTable(kpiId);
@@ -4956,25 +5016,25 @@ class Component extends DCLogic {
         const r1=v=>v==null?null:Math.round(v*10)/10;
         const cats=t.cells.map(c=>c.short);
         this._mk('ch-qta-ta', {...base, chart:{...base.chart, type:'bar', height:260},
-          series:[{name:'Target', data:t.cells.map(c=>c.targetN)},{name:'Actual', data:t.cells.map(c=>c.actualN)}],
-          colors:[p.info,p.ok], plotOptions:{bar:{borderRadius:5, columnWidth:'58%'}},
+          series:[{name:'نسبة الإنجاز', data:t.cells.map(c=>r1(c.pctN))}],
+          colors:[p.primary], plotOptions:{bar:{borderRadius:5, columnWidth:'55%'}}, dataLabels:{enabled:true, formatter:v=>v+'%'},
           xaxis:{categories:cats, labels:{style:{colors:p.muted}}},
-          yaxis:{labels:{formatter:v=>Math.round(v), style:{colors:p.muted}}}, legend:{position:'top', labels:{colors:p.muted}} });
+          yaxis:{max:100, labels:{formatter:v=>Math.round(v)+'%', style:{colors:p.muted}}} });
         this._mk('ch-qta-ach', {...base, chart:{...base.chart, type:'line', height:260},
-          series:[{name:'Achievement %', data:t.cells.map(c=>r1(c.pctN))}],
+          series:[{name:'نتيجة الاستبيان', data:t.monthCells.map(m=>r1(m.pctN))}],
           colors:[p.primary], stroke:{curve:'smooth', width:3}, markers:{size:4},
-          xaxis:{categories:cats, labels:{style:{colors:p.muted}}},
-          yaxis:{labels:{formatter:v=>Math.round(v)+'%', style:{colors:p.muted}}} });
+          xaxis:{categories:t.monthCells.map(m=>m.label), labels:{style:{colors:p.muted}}},
+          yaxis:{max:100, labels:{formatter:v=>Math.round(v)+'%', style:{colors:p.muted}}} });
         this._mk('ch-qta-cmp', {...base, chart:{...base.chart, type:'bar', height:260},
           series:[{name:'Achievement %', data:t.cells.map(c=>r1(c.pctN))}],
           colors:['#2563EB','#16A34A','#D97706','#7C3AED'], plotOptions:{bar:{borderRadius:5, columnWidth:'52%', distributed:true}}, legend:{show:false},
           xaxis:{categories:cats, labels:{style:{colors:p.muted}}},
-          yaxis:{labels:{formatter:v=>Math.round(v)+'%', style:{colors:p.muted}}} });
+          yaxis:{max:100, labels:{formatter:v=>Math.round(v)+'%', style:{colors:p.muted}}} });
         this._mk('ch-qta-trend', {...base, chart:{...base.chart, type:'line', height:260},
-          series:[{name:'Actual', data:t.cells.map(c=>c.actualN)},{name:'التراكمي', data:t.cells.map(c=>c.cumN)}],
+          series:[{name:'نتيجة الشهر', data:t.monthCells.map(m=>r1(m.pctN))},{name:'التراكمي', data:t.monthCells.map(m=>r1(m.cumPctN))}],
           colors:[p.primary,p.info], stroke:{curve:'smooth', width:[3,2]}, markers:{size:3},
-          xaxis:{categories:cats, labels:{style:{colors:p.muted}}},
-          yaxis:{labels:{formatter:v=>Math.round(v), style:{colors:p.muted}}}, legend:{position:'top', labels:{colors:p.muted}} });
+          xaxis:{categories:t.monthCells.map(m=>m.label), labels:{style:{colors:p.muted}}},
+          yaxis:{max:100, labels:{formatter:v=>Math.round(v)+'%', style:{colors:p.muted}}}, legend:{position:'top', labels:{colors:p.muted}} });
         this._mk('ch-qta-years', {...base, chart:{...base.chart, type:'bar', height:260},
           series:[{name:'نسبة الإنجاز', data:t.yearRows.map(y=>r1(y.pctN))}],
           colors:['#2563EB','#16A34A','#D97706','#7C3AED','#0891B2'], plotOptions:{bar:{borderRadius:5, columnWidth:'55%', distributed:true}}, legend:{show:false},
