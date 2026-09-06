@@ -532,33 +532,71 @@
           <div class="card" style="padding:22px">
             <div style="font-weight:600;font-size:14px;margin-bottom:16px">نموذج الإدخال</div>
             <div style="display:flex;flex-direction:column;gap:14px">
-              <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">المؤشر</label><div style="border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:13px;background:var(--surface-2);display:flex;justify-content:space-between;color:var(--text)">نسبة رضا المستفيدين — KPI-CS-014 <span style="color:var(--text-3)">▾</span></div></div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-                <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">الفترة</label><div style="border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:13px;background:var(--surface-2);display:flex;justify-content:space-between;color:var(--text)">يوليو 2026 <span style="color:var(--text-3)">▾</span></div></div>
-                <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">نوع الإدخال</label><div style="border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:13px;background:var(--surface-2);display:flex;justify-content:space-between;color:var(--text)">شهري <span style="color:var(--text-3)">▾</span></div></div>
+              <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">المؤشر</label>
+                <select value="{{ entryKpiSel }}" onChange="{{ setEntryKpi }}" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:13px;font-family:inherit;background:var(--surface-2);color:var(--text);cursor:pointer">
+                  <sc-for list="{{ eList }}" as="ek" hint-placeholder-count="10">
+                    <option value="{{ ek.value }}">{{ ek.label }}</option>
+                  </sc-for>
+                </select>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-                <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">القيمة الفعلية</label><input onInput="{{ onActual }}" value="{{ entryActual }}" type="number" style="width:100%;border:2px solid var(--primary);border-radius:10px;padding:10px 13px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--text);outline:none;font-weight:600"></div>
-                <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">المستهدف</label><div style="border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;background:var(--surface-2);color:var(--text-2);font-weight:600">90%</div></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+                <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">الشهر</label>
+                  <select value="{{ period }}" onChange="{{ setPeriod }}" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:13px;font-family:inherit;background:var(--surface-2);color:var(--text);cursor:pointer">
+                    <sc-for list="{{ periods }}" as="pp" hint-placeholder-count="13">
+                      <option value="{{ pp }}">{{ pp }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+                <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">السنة</label>
+                  <select value="{{ year }}" onChange="{{ setYear }}" style="width:100%;border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:13px;font-family:inherit;background:var(--surface-2);color:var(--text);cursor:pointer">
+                    <sc-for list="{{ years }}" as="yy" hint-placeholder-count="4">
+                      <option value="{{ yy }}">{{ yy }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+                <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">نوع الإدخال</label><div style="border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:13px;background:var(--surface-2);color:var(--text)">{{ eKpiFreq }}</div></div>
               </div>
-              <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">مصدر البيانات / مرفق</label><div style="border:1px dashed var(--border);border-radius:10px;padding:16px;font-size:12.5px;background:var(--surface-2);color:var(--text-3);text-align:center">اسحب ملفًا هنا أو اضغط للرفع</div></div>
-              <div style="display:flex;gap:10px;margin-top:6px"><button class="btn-p">إرسال للاعتماد</button><button class="btn-g">حفظ كمسودة</button></div>
+              <div><label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">المستهدف</label><div style="border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;background:var(--surface-2);color:var(--text-2);font-weight:600">{{ eKpiTarget }}</div></div>
+              <sc-if value="{{ eEngine }}" hint-placeholder-val="{{ false }}">
+                <div style="border:1px dashed var(--border);border-radius:10px;padding:18px;font-size:12.5px;color:var(--text-2);text-align:center;line-height:1.9">هذا المؤشر يُحتسب من جدول تفصيلي خاص (قنوات/أنشطة/مقارنة سنوات) — يُدخل من بطاقته لضمان دقة الحسابات.<br><span onClick="{{ openEntryCard }}" style="color:var(--primary);cursor:pointer;font-weight:600;text-decoration:underline">فتح بطاقة المؤشر ↗</span></div>
+              </sc-if>
+              <sc-if value="{{ eNotEngine }}" hint-placeholder-val="{{ true }}">
+                <div>
+                  <label style="font-size:12px;color:var(--text-2);display:block;margin-bottom:6px">القيمة الفعلية{{ eAllMonthsSuffix }}</label>
+                  <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+                    <sc-for list="{{ eRows }}" as="er" hint-placeholder-count="1">
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 13px;border-bottom:1px solid var(--border)">
+                        <span style="font-size:12.5px;color:var(--text-2)">{{ er.month }}</span>
+                        <input type="number" data-month="{{ er.month }}" value="{{ er.val }}" onInput="{{ onEntryVal }}" style="width:130px;border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text);outline:none;text-align:center;font-weight:600">
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:16px">
             <div class="card" style="padding:20px">
               <div style="font-weight:600;font-size:14px;margin-bottom:14px">الاحتساب التلقائي</div>
               <div style="display:flex;flex-direction:column;gap:12px">
-                <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:var(--text-2)">نسبة الإنجاز</span><span style="font-size:20px;font-weight:700;color:{{ calcColor }}">{{ calcAchieve }}</span></div>
-                <div style="height:8px;background:var(--surface-2);border-radius:9px;overflow:hidden"><div style="height:100%;border-radius:9px;width:{{ calcAchieve }};background:{{ calcColor }}"></div></div>
-                <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border)"><span style="font-size:13px;color:var(--text-2)">الانحراف</span><span style="font-size:15px;font-weight:600;color:{{ calcColor }}">{{ calcDev }}</span></div>
-                <div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:var(--text-2)">مقارنة بالفترة السابقة</span><span style="font-size:15px;font-weight:600;color:var(--ok)">▲ +2%</span></div>
-                <div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:var(--text-2)">الحالة</span><span style="font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:{{ calcBg }};color:{{ calcColor }}">{{ calcStatus }}</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:var(--text-2)">نسبة الإنجاز</span><span style="font-size:20px;font-weight:700;color:{{ calcColorE }}">{{ calcAchieveE }}</span></div>
+                <div style="height:8px;background:var(--surface-2);border-radius:9px;overflow:hidden"><div style="height:100%;border-radius:9px;width:{{ calcAchieveE }};background:{{ calcColorE }}"></div></div>
+                <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border)"><span style="font-size:13px;color:var(--text-2)">الانحراف</span><span style="font-size:15px;font-weight:600;color:{{ calcColorE }}">{{ calcDevE }}</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="font-size:13px;color:var(--text-2)">الحالة</span><span style="font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;background:{{ calcBgE }};color:{{ calcColorE }}">{{ calcStatusE }}</span></div>
               </div>
             </div>
             <div class="card" style="padding:20px">
               <div style="font-weight:600;font-size:14px;margin-bottom:12px">آخر الإدخالات</div>
-              <div style="font-size:12.5px;color:var(--text-2);line-height:2.1">يونيو 2026 — 72% — معتمد ✓<br>مايو 2026 — 70% — معتمد ✓<br>أبريل 2026 — 75% — معتمد ✓</div>
+              <sc-if value="{{ eHasRecent }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:12.5px;color:var(--text-2);line-height:2.1">
+                  <sc-for list="{{ eRecentRows }}" as="rr" hint-placeholder-count="3">
+                    <div>{{ rr.text }}</div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ eNoRecent }}" hint-placeholder-val="{{ true }}">
+                <div style="font-size:12.5px;color:var(--text-3)">لا توجد إدخالات سابقة لهذا المؤشر ضمن السنة الحالية.</div>
+              </sc-if>
             </div>
           </div>
         </div>
@@ -943,6 +981,81 @@
         <sc-if value="{{ hasSelection }}" hint-placeholder-val="{{ false }}">
           <div style="margin:-4px 0 16px;font-size:12px;color:var(--primary-2);display:flex;align-items:center;gap:6px">◆ المحدَّد: <strong>{{ selName }}</strong> — تُبرز الرسوم البيانية هذا المؤشر. اضغط عليه مجددًا لإلغاء التحديد.</div>
         </sc-if>
+        <!-- toolbar: search / filter / sort -->
+        <div class="card" style="padding:12px 16px;margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <div style="display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:7px 11px;flex:1;min-width:180px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+            <input value="{{ search }}" onInput="{{ setSearch }}" placeholder="بحث عن مؤشر أو كود…" style="flex:1;border:none;background:transparent;outline:none;font-family:inherit;font-size:12.5px;color:var(--text)">
+          </div>
+          <select value="{{ fStatus }}" data-f="fStatus" onChange="{{ setFilter }}" class="btn-g" style="cursor:pointer"><option value="all">كل الحالات</option><option value="ممتاز">ممتاز</option><option value="جيد">جيد</option><option value="متوسط">متوسط</option><option value="حرج">حرج</option></select>
+          <select value="{{ fFreq }}" data-f="fFreq" onChange="{{ setFilter }}" class="btn-g" style="cursor:pointer"><option value="all">كل التكرارات</option><option value="شهري">شهري</option><option value="ربع سنوي">ربع سنوي</option></select>
+          <select value="{{ sortBy }}" data-f="sortBy" onChange="{{ setFilter }}" class="btn-g" style="cursor:pointer"><option value="default">الترتيب الافتراضي</option><option value="pctDesc">الإنجاز: الأعلى أولًا</option><option value="pctAsc">الإنجاز: الأدنى أولًا</option><option value="weightDesc">الوزن: الأعلى أولًا</option><option value="name">الاسم أبجديًا</option></select>
+          <span style="font-size:12px;color:var(--text-3)">عرض {{ mktShown }} من {{ mktTotal }}</span>
+          <button onClick="{{ toggleTrash }}" class="btn-g" style="display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>سلة المحذوفات ({{ deletedCount }})</button>
+        </div>
+
+        <!-- trash / restore panel -->
+        <sc-if value="{{ trashOpen }}" hint-placeholder-val="{{ false }}">
+        <div class="card" style="padding:18px;margin-bottom:16px;border-color:var(--bad)">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <div style="font-weight:600;font-size:14px">سلة المحذوفات — {{ deletedCount }} مؤشر</div>
+            <span onClick="{{ toggleTrash }}" style="font-size:12px;color:var(--text-3);cursor:pointer">إغلاق ✕</span>
+          </div>
+          <sc-if value="{{ hasDeleted }}" hint-placeholder-val="{{ true }}">
+            <sc-for list="{{ deletedKpis }}" as="d" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+                <span style="width:11px;height:11px;border-radius:3px;flex-shrink:0;background:{{ d.dot }}"></span>
+                <div style="flex:1"><div style="font-weight:600;font-size:13px">{{ d.name }}</div><div style="font-size:11px;color:var(--text-3)">{{ d.desc }} · <span style="font-family:'IBM Plex Mono',monospace;direction:ltr">#{{ d.id }}</span></div></div>
+                <button onClick="{{ restoreKpi }}" data-id="{{ d.id }}" class="btn-g" style="display:flex;align-items:center;gap:6px;border-color:var(--ok);color:var(--ok)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.3M3 4v4h4"/></svg>استرجاع</button>
+              </div>
+            </sc-for>
+          </sc-if>
+          <sc-if value="{{ noDeleted }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13px;color:var(--text-3);text-align:center;padding:10px">لا توجد مؤشرات محذوفة.</div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <!-- KPI table -->
+        <div class="card" style="overflow-x:auto">
+          <div style="display:grid;grid-template-columns:2.6fr .9fr .7fr 1fr 1fr .9fr 1fr;gap:12px;padding:13px 18px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--text-2);min-width:820px">
+            <div>المؤشر</div><div>التكرار</div><div>الوزن</div><div>المستهدف</div><div>الإنجاز الفعلي</div><div>نسبة الإنجاز</div><div>الحالة</div>
+          </div>
+          <sc-for list="{{ mktKpis }}" as="k" hint-placeholder-count="6">
+            <div class="row" data-kpi-row="{{ k.id }}" onClick="{{ selectRow }}" style="display:grid;grid-template-columns:2.6fr .9fr .7fr 1fr 1fr .9fr 1fr;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);border-right:3px solid transparent;font-size:12.8px;align-items:center;min-width:820px;cursor:pointer">
+              <div style="display:flex;align-items:flex-start;gap:9px">
+                <span style="width:11px;height:11px;border-radius:3px;flex-shrink:0;margin-top:3px;background:{{ k.dot }}"></span>
+                <div style="flex:1;min-width:0">
+                  <sc-if value="{{ editMode }}" hint-placeholder-val="{{ false }}"><input value="{{ k.name }}" data-id="{{ k.id }}" data-field="name" onInput="{{ editMeta }}" style="width:100%;border:1px solid var(--primary);border-radius:8px;padding:6px 8px;font-size:12.5px;font-weight:600;font-family:inherit;background:var(--surface);color:var(--text);outline:none"></sc-if>
+                  <sc-if value="{{ notEdit }}" hint-placeholder-val="{{ true }}"><div style="font-weight:600;color:var(--text)">{{ k.name }}</div></sc-if>
+                  <div style="font-size:11px;color:var(--text-3);margin-top:2px">{{ k.desc }} · <span style="font-family:'IBM Plex Mono',monospace;direction:ltr">#{{ k.id }}</span></div>
+                </div>
+              </div>
+              <div>
+                <sc-if value="{{ editMode }}" hint-placeholder-val="{{ false }}"><select value="{{ k.freq }}" data-id="{{ k.id }}" data-field="freq" onChange="{{ editMeta }}" style="width:100%;border:1px solid var(--primary);border-radius:8px;padding:6px 6px;font-size:11.5px;font-family:inherit;background:var(--surface);color:var(--text);outline:none"><option value="">—</option><option>شهري</option><option>ربع سنوي</option><option>نصف سنوي</option><option>سنوي</option><option>أسبوعي</option></select></sc-if>
+                <sc-if value="{{ notEdit }}" hint-placeholder-val="{{ true }}"><span style="color:var(--text-2)">{{ k.freq }}</span></sc-if>
+              </div>
+              <div>
+                <sc-if value="{{ editMode }}" hint-placeholder-val="{{ false }}"><input value="{{ k.weight }}" data-id="{{ k.id }}" data-field="weight" onInput="{{ editMeta }}" style="width:100%;border:1px solid var(--primary);border-radius:8px;padding:6px 8px;font-size:12px;font-family:inherit;background:var(--surface);color:var(--text);outline:none"></sc-if>
+                <sc-if value="{{ notEdit }}" hint-placeholder-val="{{ true }}"><span style="color:var(--text-2)">{{ k.weight }}</span></sc-if>
+              </div>
+              <div>
+                <sc-if value="{{ editMode }}" hint-placeholder-val="{{ false }}"><input type="number" value="{{ k.target }}" data-id="{{ k.id }}" data-field="target" onInput="{{ editMeta }}" style="width:100%;border:1px solid var(--primary);border-radius:8px;padding:6px 8px;font-size:12px;font-family:inherit;background:var(--surface);color:var(--text);outline:none"></sc-if>
+                <sc-if value="{{ notEdit }}" hint-placeholder-val="{{ true }}"><span style="font-weight:600;color:var(--text)">{{ k.targetFmt }}</span></sc-if>
+              </div>
+              <div>
+                <sc-if value="{{ entryEditable }}" hint-placeholder-val="{{ true }}"><input type="number" data-id="{{ k.id }}" value="{{ k.curRaw }}" onInput="{{ k.editCurrent }}" onClick="{{ stop }}" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 9px;font-size:12.5px;font-family:inherit;background:var(--surface);color:var(--text);outline:none" style-focus="border-color:var(--primary)"></sc-if>
+                <sc-if value="{{ allMonths }}" hint-placeholder-val="{{ false }}"><div style="padding:7px 9px;font-size:12.5px;font-weight:600;color:var(--text-2);background:var(--surface-2);border-radius:8px;text-align:center" title="متوسط كل الأشهر">{{ k.curRaw }}</div></sc-if>
+              </div>
+              <div style="font-weight:700;color:{{ k.color }}">{{ k.pct }}</div>
+              <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+                <span style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;background:{{ k.bg }};color:{{ k.color }}">{{ k.status }}</span>
+                <sc-if value="{{ editMode }}" hint-placeholder-val="{{ false }}"><button onClick="{{ delKpi }}" data-id="{{ k.id }}" title="حذف المؤشر" style="width:26px;height:26px;flex-shrink:0;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--bad);cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
         <sc-if value="{{ hasCard }}" hint-placeholder-val="{{ false }}">
           <div class="card" style="padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
             <div style="font-size:13px;font-weight:600">تصدير سجلات المؤشر: <span style="color:var(--primary-2)">{{ selName }}</span></div>
@@ -1039,10 +1152,6 @@
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">الأداء الشهري (Poll Total)</div><div id="ch-p-monthly" style="min-height:240px"></div></div>
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">نسبة Percentage الشهرية</div><div id="ch-p-pct" style="min-height:240px"></div></div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">الأداء الربعي</div><div id="ch-p-quarters" style="min-height:230px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">Transactions مقابل Poll Total</div><div id="ch-p-compare" style="min-height:230px"></div></div>
-          </div>
 
           <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
             <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:14px">مقارنة السنوات</div>
@@ -1066,7 +1175,7 @@
               </tbody>
             </table>
             </div>
-            <div style="padding:12px 16px"><div id="ch-p-years" style="min-height:230px"></div></div>
+            
           </div>
           </sc-if>
 
@@ -1172,10 +1281,6 @@
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة Great / Good / Not Good حسب الربع</div><div id="ch-q-mix" style="min-height:250px"></div></div>
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">نسبة الجودة الربعية</div><div id="ch-q-quarters" style="min-height:250px"></div></div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">توزيع التقييمات</div><div id="ch-q-dist" style="min-height:230px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">Quarter Total لكل ربع</div><div id="ch-q-totals" style="min-height:230px"></div></div>
-          </div>
 
           <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
             <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:14px">مقارنة السنوات</div>
@@ -1203,7 +1308,6 @@
               </tbody>
             </table>
             </div>
-            <div style="padding:12px 16px"><div id="ch-q-years" style="min-height:230px"></div></div>
           </div>
           </sc-if>
 
@@ -1278,10 +1382,6 @@
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">النقرات الشهرية</div><div id="ch-c-monthly" style="min-height:230px"></div></div>
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">القيم التراكمية</div><div id="ch-c-cum" style="min-height:230px"></div></div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة الأداء بين الأشهر</div><div id="ch-c-cmp" style="min-height:230px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">Trend Analysis — الإنجاز التراكمي</div><div id="ch-c-trend" style="min-height:230px"></div></div>
-          </div>
 
           <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
             <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:14px">مقارنة السنوات</div>
@@ -1305,7 +1405,7 @@
               </tbody>
             </table>
             </div>
-            <div style="padding:12px 16px"><div id="ch-c-years" style="min-height:230px"></div></div>
+            
           </div>
           </sc-if>
 
@@ -1371,9 +1471,7 @@
           <div class="card" style="padding:16px 18px;margin-bottom:16px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">المشاريع حسب الأرباع</div><div id="ch-q-proj" dir="ltr" style="min-height:420px;direction:ltr"></div></div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-bottom:16px">
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة الأرباع الأربعة — Radar</div><div id="ch-q-radar" style="min-height:300px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">المشاريع المكتملة وغير المكتملة</div><div id="ch-q-donut" style="min-height:300px"></div></div>
           </div>
-          <div class="card" style="padding:16px 18px;margin-bottom:16px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة الأداء بين الأرباع</div><div id="ch-q-cmp" style="min-height:300px"></div></div>
 
           <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
             <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:14px">مقارنة السنوات</div>
@@ -1395,7 +1493,6 @@
               </tbody>
             </table>
             </div>
-            <div style="padding:12px 16px"><div id="ch-q-years" style="min-height:230px"></div></div>
           </div>
           </sc-if>
 
@@ -1514,7 +1611,6 @@
             </sc-if>
             <sc-if value="{{ selCard.table.lockType }}" hint-placeholder-val="{{ false }}">
               <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">تطور الأنشطة خلال السنة</div><div id="ch-a-line" style="min-height:300px"></div></div>
-              <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">توزيع الأنشطة على الأشهر</div><div id="ch-a-pie" style="min-height:300px"></div></div>
             </sc-if>
           </div>
 
@@ -1589,7 +1685,7 @@
                 </sc-for>
               </tbody>
             </table>
-            <div style="padding:12px 16px"><div id="ch-a-years" style="min-height:230px"></div></div>
+            
           </div>
 
           <sc-if value="{{ selCard.table.expOpen }}" hint-placeholder-val="{{ false }}">
@@ -1745,11 +1841,6 @@
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">نمو المتابعين شهريًا</div><div id="ch-f-new" style="min-height:230px"></div></div>
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">الرصيد التراكمي</div><div id="ch-f-balance" style="min-height:230px"></div></div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة New و Lost</div><div id="ch-f-cmp" style="min-height:230px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">معدل الإنجاز الشهري</div><div id="ch-f-ach" style="min-height:230px"></div></div>
-          </div>
-          <div class="card" style="padding:16px 18px;margin-bottom:16px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">Trend Analysis — اتجاه صافي النمو</div><div id="ch-f-trend" style="min-height:230px"></div></div>
 
           <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
             <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-weight:600;font-size:14px">مقارنة السنوات</div>
@@ -1777,7 +1868,7 @@
               </tbody>
             </table>
             </div>
-            <div style="padding:12px 16px"><div id="ch-f-years" style="min-height:230px"></div></div>
+            
           </div>
           </sc-if>
 
@@ -2133,16 +2224,11 @@
             </div>
             <div style="display:flex;flex-direction:column;gap:16px">
               <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">Cost و Revenue لكل شهر</div><div id="ch-fin-costrev" style="min-height:230px"></div></div>
-              <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة القنوات</div><div id="ch-fin-channels" style="min-height:230px"></div></div>
             </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">منحنى ROI الشهري</div><div id="ch-fin-roi" style="min-height:230px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">منحنى Cumulative ROI</div><div id="ch-fin-cumroi" style="min-height:230px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">توزيع الإيرادات حسب القناة</div><div id="ch-fin-revdist" style="min-height:230px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">توزيع التكاليف حسب القناة</div><div id="ch-fin-costdist" style="min-height:230px"></div></div>
           </div>
-          <div class="card" style="padding:16px 18px;margin-bottom:16px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة ROI عبر السنوات (بدّل السنة من أعلى الصفحة لإدخال بيانات كل سنة)</div><div id="ch-fin-years" style="min-height:230px"></div></div>
           </sc-if>
 
           <sc-if value="{{ selCard.showDigital }}" hint-placeholder-val="{{ false }}">
@@ -2257,15 +2343,9 @@
             </table>
           </div>
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">{{ selCard.table.in1Label }} / {{ selCard.table.in2Label }} — شهريًا</div><div id="ch-dig-sesstx" style="min-height:230px"></div></div>
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">{{ selCard.table.metricLabel }} — شهريًا</div><div id="ch-dig-metric" style="min-height:230px"></div></div>
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">{{ selCard.table.cumMetricLabel }}</div><div id="ch-dig-ccr" style="min-height:230px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">Trend Analysis — الشهري مقابل التراكمي</div><div id="ch-dig-trend" style="min-height:230px"></div></div>
           </div>
-          <sc-if value="{{ selCard.table.showTotals }}" hint-placeholder-val="{{ false }}">
-            <div class="card" style="padding:16px 18px;margin-bottom:16px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة {{ selCard.table.groupLabel }}</div><div id="ch-dig-channels" style="min-height:230px"></div></div>
-          </sc-if>
-          <div class="card" style="padding:16px 18px;margin-bottom:16px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة السنوات (بدّل السنة من أعلى الصفحة لإدخال بيانات كل سنة)</div><div id="ch-dig-years" style="min-height:230px"></div></div>
           </sc-if>
 
           <sc-if value="{{ selCard.showQta }}" hint-placeholder-val="{{ false }}">
@@ -2341,8 +2421,6 @@
           <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px">
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">نسبة الإنجاز لكل ربع</div><div id="ch-qta-ta" style="min-height:260px"></div></div>
             <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">نتيجة الاستبيان الشهرية</div><div id="ch-qta-ach" style="min-height:260px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">مقارنة الأرباع الأربعة</div><div id="ch-qta-cmp" style="min-height:260px"></div></div>
-            <div class="card" style="padding:16px 18px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">Trend Analysis — الشهري والتراكمي</div><div id="ch-qta-trend" style="min-height:260px"></div></div>
           </div>
 
           <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
@@ -2362,7 +2440,6 @@
               </tbody>
             </table>
           </div>
-          <div class="card" style="padding:16px 18px;margin-bottom:16px"><div style="font-weight:600;font-size:14px;margin-bottom:6px">نسبة الإنجاز عبر السنوات</div><div id="ch-qta-years" style="min-height:260px"></div></div>
           </sc-if>
 
           <sc-if value="{{ selCard.showAvail }}" hint-placeholder-val="{{ false }}">
@@ -2451,80 +2528,7 @@
           </sc-if>
         </sc-if>
 
-        <!-- toolbar: search / filter / sort -->
-        <div class="card" style="padding:12px 16px;margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-          <div style="display:flex;align-items:center;gap:8px;background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:7px 11px;flex:1;min-width:180px">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
-            <input value="{{ search }}" onInput="{{ setSearch }}" placeholder="بحث عن مؤشر أو كود…" style="flex:1;border:none;background:transparent;outline:none;font-family:inherit;font-size:12.5px;color:var(--text)">
-          </div>
-          <select value="{{ fStatus }}" data-f="fStatus" onChange="{{ setFilter }}" class="btn-g" style="cursor:pointer"><option value="all">كل الحالات</option><option value="ممتاز">ممتاز</option><option value="جيد">جيد</option><option value="متوسط">متوسط</option><option value="حرج">حرج</option></select>
-          <select value="{{ fFreq }}" data-f="fFreq" onChange="{{ setFilter }}" class="btn-g" style="cursor:pointer"><option value="all">كل التكرارات</option><option value="شهري">شهري</option><option value="ربع سنوي">ربع سنوي</option></select>
-          <select value="{{ sortBy }}" data-f="sortBy" onChange="{{ setFilter }}" class="btn-g" style="cursor:pointer"><option value="default">الترتيب الافتراضي</option><option value="pctDesc">الإنجاز: الأعلى أولًا</option><option value="pctAsc">الإنجاز: الأدنى أولًا</option><option value="weightDesc">الوزن: الأعلى أولًا</option><option value="name">الاسم أبجديًا</option></select>
-          <span style="font-size:12px;color:var(--text-3)">عرض {{ mktShown }} من {{ mktTotal }}</span>
-          <button onClick="{{ toggleTrash }}" class="btn-g" style="display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>سلة المحذوفات ({{ deletedCount }})</button>
-        </div>
 
-        <!-- trash / restore panel -->
-        <sc-if value="{{ trashOpen }}" hint-placeholder-val="{{ false }}">
-        <div class="card" style="padding:18px;margin-bottom:16px;border-color:var(--bad)">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-            <div style="font-weight:600;font-size:14px">سلة المحذوفات — {{ deletedCount }} مؤشر</div>
-            <span onClick="{{ toggleTrash }}" style="font-size:12px;color:var(--text-3);cursor:pointer">إغلاق ✕</span>
-          </div>
-          <sc-if value="{{ hasDeleted }}" hint-placeholder-val="{{ true }}">
-            <sc-for list="{{ deletedKpis }}" as="d" hint-placeholder-count="2">
-              <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
-                <span style="width:11px;height:11px;border-radius:3px;flex-shrink:0;background:{{ d.dot }}"></span>
-                <div style="flex:1"><div style="font-weight:600;font-size:13px">{{ d.name }}</div><div style="font-size:11px;color:var(--text-3)">{{ d.desc }} · <span style="font-family:'IBM Plex Mono',monospace;direction:ltr">#{{ d.id }}</span></div></div>
-                <button onClick="{{ restoreKpi }}" data-id="{{ d.id }}" class="btn-g" style="display:flex;align-items:center;gap:6px;border-color:var(--ok);color:var(--ok)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.3M3 4v4h4"/></svg>استرجاع</button>
-              </div>
-            </sc-for>
-          </sc-if>
-          <sc-if value="{{ noDeleted }}" hint-placeholder-val="{{ false }}">
-            <div style="font-size:13px;color:var(--text-3);text-align:center;padding:10px">لا توجد مؤشرات محذوفة.</div>
-          </sc-if>
-        </div>
-        </sc-if>
-
-        <!-- KPI table -->
-        <div class="card" style="overflow-x:auto">
-          <div style="display:grid;grid-template-columns:2.6fr .9fr .7fr 1fr 1fr .9fr 1fr;gap:12px;padding:13px 18px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:12px;font-weight:600;color:var(--text-2);min-width:820px">
-            <div>المؤشر</div><div>التكرار</div><div>الوزن</div><div>المستهدف</div><div>الإنجاز الفعلي</div><div>نسبة الإنجاز</div><div>الحالة</div>
-          </div>
-          <sc-for list="{{ mktKpis }}" as="k" hint-placeholder-count="6">
-            <div class="row" data-kpi-row="{{ k.id }}" onClick="{{ selectRow }}" style="display:grid;grid-template-columns:2.6fr .9fr .7fr 1fr 1fr .9fr 1fr;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);border-right:3px solid transparent;font-size:12.8px;align-items:center;min-width:820px;cursor:pointer">
-              <div style="display:flex;align-items:flex-start;gap:9px">
-                <span style="width:11px;height:11px;border-radius:3px;flex-shrink:0;margin-top:3px;background:{{ k.dot }}"></span>
-                <div style="flex:1;min-width:0">
-                  <sc-if value="{{ editMode }}" hint-placeholder-val="{{ false }}"><input value="{{ k.name }}" data-id="{{ k.id }}" data-field="name" onInput="{{ editMeta }}" style="width:100%;border:1px solid var(--primary);border-radius:8px;padding:6px 8px;font-size:12.5px;font-weight:600;font-family:inherit;background:var(--surface);color:var(--text);outline:none"></sc-if>
-                  <sc-if value="{{ notEdit }}" hint-placeholder-val="{{ true }}"><div style="font-weight:600;color:var(--text)">{{ k.name }}</div></sc-if>
-                  <div style="font-size:11px;color:var(--text-3);margin-top:2px">{{ k.desc }} · <span style="font-family:'IBM Plex Mono',monospace;direction:ltr">#{{ k.id }}</span></div>
-                </div>
-              </div>
-              <div>
-                <sc-if value="{{ editMode }}" hint-placeholder-val="{{ false }}"><select value="{{ k.freq }}" data-id="{{ k.id }}" data-field="freq" onChange="{{ editMeta }}" style="width:100%;border:1px solid var(--primary);border-radius:8px;padding:6px 6px;font-size:11.5px;font-family:inherit;background:var(--surface);color:var(--text);outline:none"><option value="">—</option><option>شهري</option><option>ربع سنوي</option><option>نصف سنوي</option><option>سنوي</option><option>أسبوعي</option></select></sc-if>
-                <sc-if value="{{ notEdit }}" hint-placeholder-val="{{ true }}"><span style="color:var(--text-2)">{{ k.freq }}</span></sc-if>
-              </div>
-              <div>
-                <sc-if value="{{ editMode }}" hint-placeholder-val="{{ false }}"><input value="{{ k.weight }}" data-id="{{ k.id }}" data-field="weight" onInput="{{ editMeta }}" style="width:100%;border:1px solid var(--primary);border-radius:8px;padding:6px 8px;font-size:12px;font-family:inherit;background:var(--surface);color:var(--text);outline:none"></sc-if>
-                <sc-if value="{{ notEdit }}" hint-placeholder-val="{{ true }}"><span style="color:var(--text-2)">{{ k.weight }}</span></sc-if>
-              </div>
-              <div>
-                <sc-if value="{{ editMode }}" hint-placeholder-val="{{ false }}"><input type="number" value="{{ k.target }}" data-id="{{ k.id }}" data-field="target" onInput="{{ editMeta }}" style="width:100%;border:1px solid var(--primary);border-radius:8px;padding:6px 8px;font-size:12px;font-family:inherit;background:var(--surface);color:var(--text);outline:none"></sc-if>
-                <sc-if value="{{ notEdit }}" hint-placeholder-val="{{ true }}"><span style="font-weight:600;color:var(--text)">{{ k.targetFmt }}</span></sc-if>
-              </div>
-              <div>
-                <sc-if value="{{ entryEditable }}" hint-placeholder-val="{{ true }}"><input type="number" data-id="{{ k.id }}" value="{{ k.curRaw }}" onInput="{{ k.editCurrent }}" onClick="{{ stop }}" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:7px 9px;font-size:12.5px;font-family:inherit;background:var(--surface);color:var(--text);outline:none" style-focus="border-color:var(--primary)"></sc-if>
-                <sc-if value="{{ allMonths }}" hint-placeholder-val="{{ false }}"><div style="padding:7px 9px;font-size:12.5px;font-weight:600;color:var(--text-2);background:var(--surface-2);border-radius:8px;text-align:center" title="متوسط كل الأشهر">{{ k.curRaw }}</div></sc-if>
-              </div>
-              <div style="font-weight:700;color:{{ k.color }}">{{ k.pct }}</div>
-              <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-                <span style="font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;background:{{ k.bg }};color:{{ k.color }}">{{ k.status }}</span>
-                <sc-if value="{{ editMode }}" hint-placeholder-val="{{ false }}"><button onClick="{{ delKpi }}" data-id="{{ k.id }}" title="حذف المؤشر" style="width:26px;height:26px;flex-shrink:0;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--bad);cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></sc-if>
-              </div>
-            </div>
-          </sc-for>
-        </div>
       </div>
       </sc-if>
 
@@ -4114,18 +4118,18 @@ class Component extends DCLogic {
   }
   _buildTable(kpiId){
     const cfg=this.TABLES[kpiId]; if(!cfg) return null;
-    if(cfg.kind==='cumulative') return this._buildCumTable(kpiId);
+    if(cfg.kind==='cumulative') return this._applyPeriodFilter(this._buildCumTable(kpiId), cfg);
     if(cfg.kind==='activities') return this._buildActTable(kpiId);
     if(cfg.kind==='quarterly') return this._buildQuarTable(kpiId);
-    if(cfg.kind==='qta') return this._buildQtaTable(kpiId);
-    if(cfg.kind==='followers') return this._buildFollowersTable(kpiId);
-    if(cfg.kind==='quality') return this._buildQualityTable(kpiId);
-    if(cfg.kind==='poll') return this._buildPollTable(kpiId);
+    if(cfg.kind==='qta') return this._applyPeriodFilter(this._buildQtaTable(kpiId), cfg);
+    if(cfg.kind==='followers') return this._applyPeriodFilter(this._buildFollowersTable(kpiId), cfg);
+    if(cfg.kind==='quality') return this._applyPeriodFilter(this._buildQualityTable(kpiId), cfg);
+    if(cfg.kind==='poll') return this._applyPeriodFilter(this._buildPollTable(kpiId), cfg);
     if(cfg.kind==='years') return this._buildYearTable(kpiId);
-    if(cfg.kind==='sum') return this._buildSumTable(kpiId);
-    if(cfg.kind==='financial') return this._buildFinTable(kpiId);
+    if(cfg.kind==='sum') return this._applyPeriodFilter(this._buildSumTable(kpiId), cfg);
+    if(cfg.kind==='financial') return this._applyPeriodFilter(this._buildFinTable(kpiId), cfg);
     if(cfg.kind==='availability') return this._buildAvailTable(kpiId);
-    if(cfg.kind==='digital') return this._buildDigitalTable(kpiId);
+    if(cfg.kind==='digital') return this._applyPeriodFilter(this._buildDigitalTable(kpiId), cfg);
     const _k=this._effMKT().find(x=>x.id===kpiId); const tgt=_k?parseFloat(_k.target):cfg.targetPct;
     const data=this._tblData(kpiId);
     let sumO=0, sumF=0;
@@ -4146,7 +4150,7 @@ class Component extends DCLogic {
     const worst = filled.slice().sort((a,b)=>a.rateN-b.rateN)[0];
     const avg = filled.length? filled.reduce((s,r)=>s+r.rateN,0)/filled.length : null;
     const trend = filled.length>=2 ? (filled[filled.length-1].rateN - filled[filled.length-2].rateN) : null;
-    return {
+    return this._applyPeriodFilter({
       cols: cfg.cols.map(c=>({label:c.label})), kpiId,
       rows,
       totOrders: sumO.toLocaleString('en-US'), totFailed: sumF.toLocaleString('en-US'),
@@ -4163,7 +4167,25 @@ class Component extends DCLogic {
       anTrend: trend==null?'—':(trend>0?'▲ تحسّن '+trend.toFixed(1)+'٪':(trend<0?'▼ تراجع '+Math.abs(trend).toFixed(1)+'٪':'ثابت')),
       anTrendColor: trend==null?'var(--text-3)':(trend>=0?'var(--ok)':'var(--bad)'),
       anVsTarget: yearRate==null?'—':((yearRate-tgt)>=0?'+':'')+(yearRate-tgt).toFixed(1)+'٪ مقابل الهدف'
-    };
+    }, cfg);
+  }
+  // فلترة عرض الجدول الشهري حسب الشهر المختار (لا تغيّر أي بيانات مخزّنة — عرض فقط)
+  _applyPeriodFilter(t, cfg){
+    if(!t) return t;
+    if(!cfg || cfg.kind==='quarterly' || cfg.kind==='years' || cfg.kind==='activities' || cfg.kind==='availability') return t;
+    const period = this.state.period;
+    if(period === 'كل الشهور') return t;
+    const mi = this.MONTHS.indexOf(period);
+    if(mi < 0) return t;
+    const take = (arr) => (Array.isArray(arr) && arr.length===12) ? [arr[mi]] : arr;
+    const out = Object.assign({}, t);
+    ['months','monthRows','cells','monthCells','monthlyCells','cumCells','rows','cumRows'].forEach(k=>{
+      if(out[k] !== undefined) out[k] = take(out[k]);
+    });
+    if(Array.isArray(out.inputRows)){
+      out.inputRows = out.inputRows.map(r => (r && Array.isArray(r.cells) && r.cells.length===12) ? Object.assign({}, r, { cells: take(r.cells) }) : r);
+    }
+    return out;
   }
   // ===== Universal Export Engine — يعمل مع أي مؤشر (تلقائيًا حسب نوع المحرك) =====
   _expName(kpiId){ const k=this._effMKT().find(x=>x.id===kpiId)||{}; const c=this.TABLES[kpiId]||{};
@@ -5275,6 +5297,44 @@ class Component extends DCLogic {
   backToList = () => { this.setState({ view: 'list' }); };
   setTab = (e) => { const t = e.currentTarget.dataset.tab; if(t) this.setState({ tab: t }); };
   onActual = (e) => { this.setState({ entryActual: e.target.value }); };
+  _deptScreenMap = { mkt:'marketing', emkt:'emarketing', pr:'prmedia', vol:'volunteers' };
+  _entryKpiList(){
+    const depts=[['mkt',this.MKT,'التسويق'],['emkt',this.EMKT,'التسويق الإلكتروني'],['pr',this.PR,'العلاقات العامة والإعلام'],['vol',this.VOL,'شئون المتطوعين']];
+    const out=[];
+    depts.forEach(([code,list,label])=>{
+      let del=[]; try{ del=JSON.parse(localStorage.getItem('kpi_'+code+'_deleted')||'[]'); }catch(e){}
+      let custom=[]; try{ custom=JSON.parse(localStorage.getItem('kpi_'+code+'_custom')||'[]'); }catch(e){}
+      [...list, ...(Array.isArray(custom)?custom:[])].forEach(k=>{
+        if(del.includes(k.id)) return;
+        out.push({ id:k.id, dept:code, deptLabel:label, name:k.name, target:k.target, freq:k.freq||'شهري',
+          engine: !!this.TABLES[k.id], value: code+'::'+k.id, label: k.name+' — '+label });
+      });
+    });
+    return out;
+  }
+  _eKey(dept, year, month){ return 'kpi_' + dept + '_' + year + '_' + month; }
+  _eGet(dept, year, month){ try{ const s=localStorage.getItem(this._eKey(dept,year,month)); return s?JSON.parse(s):{}; }catch(e){ return {}; } }
+  _eSet(dept, year, month, kpiId, val){
+    const obj = this._eGet(dept,year,month);
+    obj[kpiId] = val===''? '' : parseFloat(val);
+    localStorage.setItem(this._eKey(dept,year,month), JSON.stringify(obj));
+    if(dept===this._dept() && String(year)===String(this.state.year) && month===this.state.period){ this.setState({ current: obj }); }
+    this._lastKey=null; this.forceUpdate();
+  }
+  setEntryKpi = (e) => { this.setState({ entryKpiSel: e.target.value }); };
+  onEntryVal = (e) => {
+    const m = e.currentTarget.dataset.month;
+    const eSel = this.state.entryKpiSel || (this._entryKpiList()[0]||{}).value;
+    if(!eSel) return;
+    const parts = eSel.split('::');
+    this._eSet(parts[0], this.state.year, m, parts[1], e.target.value);
+  };
+  openEntryCard = () => {
+    const eSel = this.state.entryKpiSel || (this._entryKpiList()[0]||{}).value;
+    if(!eSel) return;
+    const parts = eSel.split('::');
+    this.setState({ screen: this._deptScreenMap[parts[0]]||'marketing', view:'card', selectedId:parts[1], tab:'history' });
+  };
 
   CONNECTORS = [
     {name:'نظام الموارد البشرية (HR)', abbr:'HR', type:'SQL Server', freq:'يومي', lastSync:'قبل 12 دقيقة', status:'متصل', ok:true},
@@ -5317,6 +5377,39 @@ class Component extends DCLogic {
       if(ach>=95){ calcColor='var(--ok)'; calcBg='var(--ok-soft)'; calcStatus='محقق'; }
       else if(ach>=70){ calcColor='var(--warn)'; calcBg='var(--warn-soft)'; calcStatus='متعثر'; }
       else { calcColor='var(--bad)'; calcBg='var(--bad-soft)'; calcStatus='حرج'; }
+    }
+    // generic data-entry screen (all KPIs, month/all-months filter)
+    const eList = this._entryKpiList();
+    const eSelVal = this.state.entryKpiSel || (eList[0] ? eList[0].value : '');
+    const eParts = eSelVal.split('::'); const eDept = eParts[0]; const eKpiId = eParts[1];
+    const eKpi = eList.find(x=>x.value===eSelVal);
+    const eEngine = eKpi ? eKpi.engine : false;
+    const eAllMonths = this.state.period === 'كل الشهور';
+    const eMonthsToShow = eAllMonths ? this.MONTHS : [this.state.period];
+    const eRows = (eKpi && !eEngine) ? eMonthsToShow.map(m=>{
+      const stored = this._eGet(eDept, this.state.year, m);
+      const v = stored[eKpiId];
+      return { month:m, val:(v===undefined?'':v) };
+    }) : [];
+    let calcAchieveE='—', calcDevE='—', calcColorE='var(--text-2)', calcBgE='var(--surface-2)', calcStatusE='—';
+    if(eKpi && !eEngine){
+      const tgt=parseFloat(eKpi.target);
+      const vals=eRows.map(r=>parseFloat(r.val)).filter(v=>!isNaN(v));
+      const actualValE = vals.length? (vals.reduce((a,b)=>a+b,0)/vals.length) : NaN;
+      if(!isNaN(actualValE) && !isNaN(tgt) && tgt){
+        const ach=Math.round(actualValE/tgt*100);
+        const dev=Math.round((actualValE-tgt)/tgt*100);
+        calcAchieveE=ach+'%'; calcDevE=(dev>=0?'+':'')+dev+'%';
+        if(ach>=95){ calcColorE='var(--ok)'; calcBgE='var(--ok-soft)'; calcStatusE='محقق'; }
+        else if(ach>=70){ calcColorE='var(--warn)'; calcBgE='var(--warn-soft)'; calcStatusE='متعثر'; }
+        else { calcColorE='var(--bad)'; calcBgE='var(--bad-soft)'; calcStatusE='حرج'; }
+      }
+    }
+    let eRecentRows=[];
+    if(eKpi && !eEngine){
+      const filled=[];
+      this.MONTHS.forEach(m=>{ const v=(this._eGet(eDept,this.state.year,m)||{})[eKpiId]; if(v!==undefined && v!=='' && !isNaN(v)) filled.push({m, v}); });
+      eRecentRows = filled.slice(-3).reverse().map(r=>({ text: r.m+' '+this.state.year+' — '+r.v }));
     }
     // marketing computed
     const mc = this._mktComputed();
@@ -5451,6 +5544,13 @@ class Component extends DCLogic {
       mktBelow: statList.filter(k=>k.pctN!==null && k.pctN<75).length,
       entryActual: this.state.entryActual, onActual: this.onActual,
       calcAchieve, calcDev, calcColor, calcBg, calcStatus,
+      eList, entryKpiSel: eSelVal, setEntryKpi: this.setEntryKpi,
+      eEngine, eNotEngine: !eEngine, openEntryCard: this.openEntryCard,
+      eKpiTarget: eKpi ? String(eKpi.target) : '—', eKpiFreq: eKpi ? eKpi.freq : '—',
+      eAllMonthsSuffix: eAllMonths ? ' (كل الشهور)' : '',
+      eRows, onEntryVal: this.onEntryVal,
+      calcAchieveE, calcDevE, calcColorE, calcBgE, calcStatusE,
+      eRecentRows, eHasRecent: eRecentRows.length>0, eNoRecent: eRecentRows.length===0,
       isList: s==='kpis' && this.state.view==='list',
       isCard: s==='kpis' && this.state.view==='card',
       openCard: this.openCard, backToList: this.backToList, setTab: this.setTab,
